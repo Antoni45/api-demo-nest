@@ -1,5 +1,12 @@
 import { IsNotEmpty, IsEmail } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Profile } from '../profile/profile.entity';
 
 @Entity()
 export class User {
@@ -17,4 +24,8 @@ export class User {
   @IsNotEmpty()
   @Column()
   password: string;
+
+  @OneToOne(() => Profile)
+  @JoinColumn()
+  profile: Profile;
 }

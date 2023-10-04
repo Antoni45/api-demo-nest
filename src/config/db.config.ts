@@ -1,3 +1,4 @@
+import { Profile } from 'src/modules/profile/profile.entity';
 import { User } from 'src/modules/user/user.entity';
 
 export const dbConfig: any = {
@@ -7,6 +8,6 @@ export const dbConfig: any = {
   username: 'root',
   password: '',
   database: 'db_demo_nest',
-  entities: [User],
+  entities: [User, Profile],
   synchronize: true,
 };
