@@ -1,5 +1,5 @@
-import { Profile } from 'src/modules/profile/profile.entity';
-import { User } from 'src/modules/user/user.entity';
+import { Profile } from 'src/modules/profile/Profile';
+import { User } from 'src/modules/user/User';
 
 export const dbConfig: any = {
   type: 'mysql',
