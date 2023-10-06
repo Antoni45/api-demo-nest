@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './User';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { UserInterface } from 'src/types/UserInterface';
 
 @Injectable()
 export class UsersService {
@@ -45,5 +46,33 @@ export class UsersService {
       throw new HttpException('Error save user!', HttpStatus.BAD_REQUEST);
 
     return result;
+  }
+
+  // Rénitialisation d'un mot de passe utilisateur
+  // resetPassword(email: string) {}
+
+  // Mise à jour infos utilisateur
+  async updateInfoUser(id: number, data: UserInterface) {
+    const { username, email, currentPassword, newPassword } = data;
+    // On va récupérer d'abord l'utilisateur à modifier
+    const userUpdated = await this.userRepository.findOneBy({ id: id });
+    if (!userUpdated) {
+      throw new HttpException('User not found!', HttpStatus.BAD_REQUEST);
+    }
+    const isMatch = await bcrypt.compare(currentPassword, userUpdated.password);
+    if (!isMatch) {
+      throw new HttpException(
+        'Your current password is wrong!',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Ici c'est la modification
+    userUpdated.username = username ?? userUpdated.username;
+    userUpdated.email = email ?? userUpdated.email;
+    userUpdated.password =
+      (await bcrypt.hash(newPassword, 10)) ?? userUpdated.password;
+
+    return await this.userRepository.save(userUpdated);
   }
 }
