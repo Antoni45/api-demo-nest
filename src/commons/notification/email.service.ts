@@ -8,12 +8,12 @@ export class EmailService {
   constructor() {
     // Configuration de transpoeteur SMTP
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.mailtrap.io',
+      host: 'sandbox.smtp.mailtrap.io', // Utilisation de serveur SMTP locale pour le test
       port: 2525,
       secure: false,
       auth: {
-        user: 'nirinaantoni@gmail.com',
-        pass: 'ndrema45',
+        user: '35132771e7f74f',
+        pass: '1b9399f7989f9e',
       },
     });
   }
@@ -21,14 +21,15 @@ export class EmailService {
   // Envoi mail
   async sendMail(to: string, subject: string, text: string) {
     const mailOptions = {
-      from: 'nirinaantoni@gmail.com',
+      from: 'from@example.com',
       to,
       subject,
       text,
     };
 
     try {
-      return await this.transporter.sendMail(mailOptions);
+      const res = await this.transporter.sendMail(mailOptions);
+      if (res) return { message: 'Email sent successfully!' };
     } catch (error) {
       throw new HttpException('Error sending email!', HttpStatus.BAD_REQUEST);
     }

@@ -4,6 +4,7 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'src/modules/user/User';
@@ -31,5 +32,12 @@ export class AuthController {
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @Post('logout')
+  async logout(@Req() req: any) {
+    const token = req.headers.authorization?.split(' ')[1];
+    await this.authService.addToBlacklist(token);
+    return { message: 'Déconnexion réussie!' };
   }
 }

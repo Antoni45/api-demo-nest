@@ -6,6 +6,8 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
+  private blacklist: Set<string> = new Set();
+
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
@@ -29,5 +31,15 @@ export class AuthService {
 
   registration(user: User) {
     return this.userService.createUser(user);
+  }
+
+  // Ajout de token à la liste noire
+  async addToBlacklist(token: string) {
+    this.blacklist.add(token);
+  }
+
+  // Verification si token dans la liste noire
+  async isTokenBlacklisted(token: string): Promise<boolean> {
+    return this.blacklist.has(token);
   }
 }

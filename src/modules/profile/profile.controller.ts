@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Get,
   UseGuards,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
@@ -32,6 +33,16 @@ export class ProfileController {
   update(@Param('id', ParseIntPipe) id: number, @Body() profile: Profile) {
     try {
       return this.profileService.editProfile(id, profile);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  getProfileByUser(@Param('id', ParseIntPipe) userId: number) {
+    try {
+      return this.profileService.findProfileByUser(userId);
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }

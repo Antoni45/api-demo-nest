@@ -11,6 +11,18 @@ export class ProfileService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  async findProfileByUser(userId: number) {
+    const profile = await this.profileRepository
+      .createQueryBuilder('p')
+      .where('p.user = :user', { user: userId })
+      .getOne();
+
+    if (!profile)
+      throw new HttpException('Profil not found!', HttpStatus.BAD_REQUEST);
+
+    return profile;
+  }
+
   // Création nouveau profile utilisateur
   async createProfile(userId: any, profile: Profile) {
     // On va verifier si l'id de l'utilisaeur est valide
